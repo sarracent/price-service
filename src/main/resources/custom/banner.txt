@@ -1,0 +1,2 @@
+${application.title} ${application.version}
+${spring-boot.formatted-version}
