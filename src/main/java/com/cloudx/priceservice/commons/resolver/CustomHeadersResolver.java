@@ -19,8 +19,6 @@ public class CustomHeadersResolver {
 
     public static Map<String, String> generateHeadersMap(Map<String, Object> parametersMap) {
         Map<String, String> headersMap = new HashMap<>();
-        headersMap.put(SESSION_NAME, searchValueHeader(parametersMap, SESSION_NAME.toLowerCase()));
-        headersMap.put(CHANNEL_NAME, searchValueHeader(parametersMap, CHANNEL_NAME.toLowerCase()));
         headersMap.put(SERVICE_NAME, searchValueHeader(parametersMap, SERVICE_NAME.toLowerCase()));
 
         return headersMap;
@@ -42,12 +40,12 @@ public class CustomHeadersResolver {
 
     public static void validateHeaders(Map<String, String> headersMap) {
         List<String> messageList = new ArrayList<>();
-        if (headersMap.get(SESSION_NAME).isEmpty())
-            messageList.add(SESSION_NAME);
-        if (headersMap.get(CHANNEL_NAME).isEmpty())
-            messageList.add(CHANNEL_NAME);
+        if (headersMap.get(SERVICE_NAME).isEmpty())
+            messageList.add(SERVICE_NAME);
 
         if (!messageList.isEmpty())
-            throw new ControllersException(Errors.ERROR_BUSINESS_VALIDATION_NULL_OR_EMPTY.getCode(), String.format(Errors.ERROR_BUSINESS_VALIDATION_NULL_OR_EMPTY.getMessage(), String.join(", ", messageList)));
+            throw new ControllersException(Errors.ERROR_BUSINESS_VALIDATION_NULL_OR_EMPTY.getCode(),
+                    String.format(Errors.ERROR_BUSINESS_VALIDATION_NULL_OR_EMPTY.getMessage(),
+                            String.join(", ", messageList)));
     }
 }

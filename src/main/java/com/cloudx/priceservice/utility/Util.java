@@ -1,18 +1,13 @@
 package com.cloudx.priceservice.utility;
 
 import com.cloudx.priceservice.constants.Errors;
-import com.cloudx.priceservice.model.Price;
-import com.cloudx.priceservice.repository.PriceRepository;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.apache.logging.log4j.ThreadContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -178,30 +173,4 @@ public class Util {
         }
     }
 
-    /**
-     * Gets the transaction id.
-     *
-     * @return the string
-     */
-    public static String getTransactionId() {
-        return ThreadContext.get(Logs.Header.TRANSACTION_ID.name());
-    }
-
-    /**
-     * Get session id string.
-     *
-     * @return the session id
-     */
-    public static String getSessionId() {
-        return ThreadContext.get(Logs.Header.SESSION_ID.name()) == null ? "" : ThreadContext.get(Logs.Header.SESSION_ID.name());
-    }
-
-    /**
-     * Gets channel id.
-     *
-     * @return the channel id
-     */
-    public static String getChannelId() {
-        return ThreadContext.get(Logs.Header.CHANNEL_ID.name()) == null ? "" : ThreadContext.get(Logs.Header.CHANNEL_ID.name());
-    }
 }

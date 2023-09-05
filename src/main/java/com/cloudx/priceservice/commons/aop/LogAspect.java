@@ -77,7 +77,7 @@ public class LogAspect {
         return response;
     }
 
-    @Around("@annotation(com.cloudx.priceservice.annotations.log.LogDAO) || @annotation(com.cloudx.priceservice.annotations.log.LogBO)")
+    @Around("@annotation(com.cloudx.priceservice.annotations.log.LogService))")
     public Object logOperationTime(ProceedingJoinPoint jp) throws Throwable {
         long start = System.currentTimeMillis();
         Object proceed = jp.proceed();
@@ -198,14 +198,10 @@ public class LogAspect {
 
     private void updateLogParameter(String operationName, String methodName, Map<String, Object> parametersMap, Map<String, String> headersMap) {
         final String transactionId = Util.generateUniqueId(methodName);
-        final String sessionId = headersMap.get(SESSION_NAME);
         final String serviceId = headersMap.get(SERVICE_NAME);
-        final String channelId = headersMap.get(CHANNEL_NAME);
 
         ThreadContext.put(TRANSACTION_ID.name(), transactionId);
-        ThreadContext.put(SESSION_ID.name(), sessionId);
         ThreadContext.put(SERVICE_ID.name(), serviceId);
-        ThreadContext.put(CHANNEL_ID.name(), channelId);
         ThreadContext.put(OPERATION.name(), operationName);
         ThreadContext.put(REQUEST.name(), getRequest(parametersMap));
     }
