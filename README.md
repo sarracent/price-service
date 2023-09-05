@@ -2,58 +2,89 @@
 
 **Objetivo**
 
-Simplificar el desarrollo de microservicios REST con SpringBoot para Claro. Se recomienda reemplazar ente README con
-README-TEMPLATE actualizado con la informacion del proyecto.
+Construir una aplicación/servicio que provea una end point rest de consulta tal que:
+
+Acepte como parámetros de entrada: fecha de aplicación, identificador de producto, identificador de cadena.
+Devuelva como datos de salida: identificador de producto, identificador de cadena, tarifa a aplicar, fechas de aplicación y precio final a aplicar.
+
+**Execute Service**
+
+`mvn clean install`
+
+`mvn spring-boot:run`
+
+**Ejemplo de peticones al servicio con datos del ejemplo**
+
+* **Test 1: Request at 10:00 AM on Day 14 of Product 35455 for Brand 1 (ZARA)**
+
+````
+    curl -X GET \
+        'https://your-api-url.com/api/prices?applicationDate=2020-06-14T10:00:00&productId=35455&brandId=1' \
+        -H 'service-id: prices-service' \
+        -H 'Content-Type: application/json'
+````
+
+* **Test 2: Request at 4:00 PM on Day 14 of Product 35455 for Brand 1 (ZARA)**
+
+````
+    curl -X GET \
+        'https://your-api-url.com/api/prices?applicationDate=2020-06-14T16:00:00&productId=35455&brandId=1' \
+        -H 'service-id: prices-service' \
+        -H 'Content-Type: application/json'
+````
+
+* **Test 3: Request at 9:00 PM on Day 14 of Product 35455 for Brand 1 (ZARA)**
+
+````
+    curl -X GET \
+        'https://your-api-url.com/api/prices?applicationDate=2020-06-14T21:00:00&productId=35455&brandId=1' \
+        -H 'service-id: prices-service' \
+        -H 'Content-Type: application/json'
+````
+
+* **Test 4: Request at 10:00 AM on Day 15 of Product 35455 for Brand 1 (ZARA)**
+
+````
+    curl -X GET \
+        'https://your-api-url.com/api/prices?applicationDate=2020-06-15T10:00:00&productId=35455&brandId=1' \
+        -H 'service-id: prices-service' \
+        -H 'Content-Type: application/json'
+````
+
+* **Test 5: Request at 9:00 PM on the 16th of Product 35455 for Brand 1 (ZARA)**
+
+````
+    curl -X GET \
+        'https://your-api-url.com/api/prices?applicationDate=2020-06-16T21:00:00&productId=35455&brandId=1' \
+        -H 'service-id: prices-service' \
+        -H 'Content-Type: application/json'
+````
 
 **Estructura**
 
 | Package     | Descripcion                                                  |
 |-------------|--------------------------------------------------------------|
-| business/   | Capa de negocio, clases relacionadas a la logica del negocio |
-| client/     | Capa cliente, clases relacionadas al consumo de apis         |
 | commons/    | Clases comunes al proyecto                                   |
 | config/     | Configuraciones                                              |
 | constants/  | Clases con utilidades o auxiliares                           |
 | controller/ | Controladores                                                |
-| dao/        | Capa acceso a datos                                          |
-| mapper/     | Capa de mapeo de objetos                                     |
+| repository/ | Capa acceso a datos                                          |
 | model/      | Capa de modelo de clases                                     |
 | service/    | Capa de servicios                                            |
 
-**Links Utiles**
-
-* [Documentacion](http://gracia.claro.amx:8090/display/CPRE/Starter+REST)
-
-* [Validaciones](https://www.baeldung.com/javax-validation)
-
-* [Resilience4j](https://resilience4j.readme.io/docs/getting-started-3)
-
-* [Log ElasticSearch](http://gracia.claro.amx:8090/display/NPIYS/log4elk-spring-boot)
-
-* [WebClient](https://www.baeldung.com/spring-5-webclient)
 
 ---
 
 ### Estructura
 
-**business**
-
-Componentes relacionados a la logica de negocio cuyo fin es verificar y validar los datos de cada objeto/tabla de la
-base.
-
 **config**
 
-* `DataSourceConfig`: Contiene la configuracion de los datasource de la base CCARD y PROD.
-* `MyBatisConfig`: Contiene la configuracion y administracion de los mappers de cada base CCARD y PROD, como asi tambien
-  la generacion de su sesion.
+Contiene clase de configuración del servicio
 
-**dao**
+**respository**
 
-Componentes relacionados al acceso de cada objeto/tabla de la base.
+Componentes relacionados al acceso de base de datos.
 
-**mapper**
-
-Mappers encargado de convertir cada objeto/tabla de la base configurada en formato XML a clases JAVA.
 
 **model**
 
@@ -96,12 +127,12 @@ Ruta de la clase: `commons/resilience4j/Resilience4jService`
 Ejemplo:
 
 ```
-        resilience4jService.executeCellulars(() -> cellularsService.getCellularPlans(request));
+        (resilience4JService.executePrices(() -> priceService.findPricesByParameters(request));
 ```
 
 Donde:
-> * resilience4jService.executeCellulars: Metodo generado para asignar una configuración personalizada de la libreria resilience4j.
-> * cellularsService.getCellularPlans: Metodo a encapsular con el fin de ejecutar las configuraciones realizadas en la libreria resilience4j.
+> * resilience4jService.executePrices: Metodo generado para asignar una configuración personalizada de la libreria resilience4j.
+> * priceService.findPricesByParameters: Metodo a encapsular con el fin de ejecutar las configuraciones realizadas en la libreria resilience4j.
 > * request: Parámetros de entrada del metodo.
 
 * **Circuit Breaker**
@@ -112,8 +143,8 @@ configuracion en el metodo que corresponda encapsular.
 Ejemplo:
 
 ```
-    @CircuitBreaker(name = CELLULARS_API)
-    public <T> T executeCellulars(Supplier<T> operation) {
+    @CircuitBreaker(name = PRICES_API)
+    public <T> T executePrices(Supplier<T> operation) {
         return operation.get();
     }
 ```
@@ -126,8 +157,8 @@ en el metodo que corresponda encapsular.
 Ejemplo:
 
 ```
-    @RateLimiter(name = CELLULARS_API)
-    public <T> T executeCellulars(Supplier<T> operation) {
+    @RateLimiter(name = PRICES_API)
+    public <T> T executePrices(Supplier<T> operation) {
         return operation.get();
     }
 ```
@@ -140,8 +171,8 @@ el metodo que corresponda encapsular.
 Ejemplo:
 
 ```
-    @Bulkhead(name = CELLULARS_API)
-    public <T> T executeCellulars(Supplier<T> operation) {
+    @Bulkhead(name = PRICES_API)
+    public <T> T executePrices(Supplier<T> operation) {
         return operation.get();
     }
 ```
@@ -154,15 +185,15 @@ metodo que corresponda encapsular.
 Ejemplo:
 
 ```
-    @Retry(name = CELLULARS_API)
-    public <T> T executeCellulars(Supplier<T> operation) {
+    @Retry(name = PRICES_API)
+    public <T> T executePrices(Supplier<T> operation) {
         return operation.get();
     }
 ```
 
-**Excepciones y Log a ElasticSearch**
+**Excepciones y Log**
 
-Todas las excepciones y los tiempos de ejecución son capturados y enviados a ElasticSearch a traves del logueo por
+Todas las excepciones y los tiempos de ejecución son capturados a traves del logueo por
 aspecto.
 
 Ruta de la clase: `commons/aop/LogAspect`
@@ -186,7 +217,7 @@ Ejemplo:
 ````
 {
     "resultCode": "100003",
-    "resultMessage": "Error el campo Channel-Id es nulo o vacio"
+    "resultMessage": "Error el campo Service-Id es nulo o vacio"
 }
 ````
 
@@ -200,10 +231,7 @@ Donde los Enums Logs.Header y Logs.Basic, poseen los siguientes valores:
 
 ````
     Logs.Header:
-        TRANSACTION_ID,
-        SESSION_ID,
-        SERVICE_ID,
-        CHANNEL_ID;
+        SERVICE_ID;
     Logs.Basic
         OPERATION,
         CODE,
