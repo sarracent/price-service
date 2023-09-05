@@ -45,7 +45,7 @@ public class SpringDocConfig {
     private String version;
     @NotNull
     @NotBlank
-    private String urlConfluence;
+    private String urlGithub;
     @NotNull
     @NotBlank
     private String enabledServerHttps;
@@ -81,8 +81,8 @@ public class SpringDocConfig {
     }
 
     private ExternalDocumentation externalConfluenceDocumentation() {
-        if (isEnabled(this.urlConfluence))
-            return new ExternalDocumentation().description("Confluence Documentation").url(urlConfluence);
+        if (isEnabled(this.urlGithub))
+            return new ExternalDocumentation().description("Confluence Documentation").url(urlGithub);
         return null;
     }
 }

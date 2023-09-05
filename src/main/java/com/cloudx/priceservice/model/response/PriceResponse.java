@@ -17,5 +17,5 @@ import java.util.List;
 @Schema(description = "Object containing PriceResponse")
 public class PriceResponse extends ServiceResponse {
     @Schema(description = "List of Prices")
-    private List<PriceDTO> pricesList;
+    private List<PriceDTO> prices;
 }
