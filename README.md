@@ -4,6 +4,10 @@
 
 `price-service`
 
+**Puerto**
+
+`8080`
+
 **Objetivo**
 
 Construir una aplicación/servicio que provea una end point rest de consulta tal que:
