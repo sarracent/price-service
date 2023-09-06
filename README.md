@@ -1,5 +1,9 @@
 # Microservicio REST
 
+**Nombre del servicio**
+
+`price-service`
+
 **Objetivo**
 
 Construir una aplicación/servicio que provea una end point rest de consulta tal que:
